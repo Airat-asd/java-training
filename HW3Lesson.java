@@ -24,7 +24,6 @@ public class HW3Lesson {
     static void gameGuessNumber() {
         Random rand = new Random();
         int hiddenNumber = rand.nextInt(9);
-        System.out.println(hiddenNumber);
         boolean win = false;    //win status
         int repeat = 1;         //the number of attempts
         int numberEntered;
@@ -87,21 +86,14 @@ public class HW3Lesson {
     }
 
     static int numberEntered(String message, int min, int max) {     //entering a number by the user using keyboard from minimum to maxmimum
-            int numberEntered;
-            String numberEnteredString;
-            do {
-                System.out.println(message);
-                numberEnteredString = sc.nextLine();
-                if ((numberEnteredString.equals("0")) || (numberEnteredString.equals("1"))) {
-                    numberEntered = Integer.parseInt(numberEnteredString);
-                } else {
-                    System.out.println("Please enter 0 or 1.");
-                    numberEntered = max;
-                    continue;
-                }
-             } while (numberEntered < min || numberEntered > max);
-            return numberEntered;
-
+    	int numberEntered = 0;
+       	String numberEnteredString = "0";
+       	 do {
+            System.out.println(message);
+            numberEnteredString = sc.nextLine();
+		   	numberEntered = Integer.parseInt(numberEnteredString);
+        	} while (numberEntered < min || numberEntered > max);
+        return numberEntered;
     }
 
 
