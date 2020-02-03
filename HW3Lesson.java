@@ -87,19 +87,23 @@ public class HW3Lesson {
     }
 
     static int numberEntered(String message, int min, int max) {     //entering a number by the user using keyboard from minimum to maxmimum
-        int numberEntered;
-        do {
-            System.out.println(message);
-            try {
-                numberEntered = sc.nextInt();
-            }
-            catch (InputMismatchException e) {
-                System.out.println("\tInvalid input type (must be an integer)");
-                sc.nextLine();  // Clear invalid input from scanner buffer.
-            }
-        } while (numberEntered < min || numberEntered > max);
-        return numberEntered;
+            int numberEntered;
+            String numberEnteredString;
+            do {
+                System.out.println(message);
+                numberEnteredString = sc.nextLine();
+                if ((numberEnteredString.equals("0")) || (numberEnteredString.equals("1"))) {
+                    numberEntered = Integer.parseInt(numberEnteredString);
+                } else {
+                    System.out.println("Please enter 0 or 1.");
+                    numberEntered = max;
+                    continue;
+                }
+             } while (numberEntered < min || numberEntered > max);
+            return numberEntered;
+
     }
+
 
     static String wordEntered(String message) {     //entering a word by the user using keyboard
         String wordEntered, wordEnteredLower;
