@@ -4,6 +4,7 @@
  * @version date 01.02.2020
  */
 import java.util.*;
+import java.io.*;
 
 public class HW3Lesson {
 
@@ -12,10 +13,10 @@ public class HW3Lesson {
     public static void main(String[] args) {
         int replayGame = 0;
         do {
-            int selectionOfGames = numberEntered("What should we play? Press \"1\" if in \"Guess the number\", press \"2\" if in \"Guess the word\":", 1, 2);
+            int selectionOfGames = numberEnteredMethod("What should we play? Press \"1\" if in \"Guess the number\", press \"2\" if in \"Guess the word\":", 1, 2);
             if (selectionOfGames == 1) gameGuessNumber();
-            if (selectionOfGames == 2) gamesGuessWord();
-            replayGame = numberEntered("What play to again? Press \"1\" if \"Yes\", press \"0\" if \"No\":", 0, 1);
+            if (selectionOfGames == 2) gameGuessWord();
+            replayGame = numberEnteredMethod("What play to again? Press \"1\" if \"Yes\", press \"0\" if \"No\":", 0, 1);
         } while (replayGame == 1);
         System.out.println("Goodbye!");
         sc.close();
@@ -28,7 +29,7 @@ public class HW3Lesson {
         int repeat = 1;         //the number of attempts
         int numberEntered;
         do {
-            numberEntered = numberEntered("Enter the hidden number from 0 to 9:", 0, 9);
+            numberEntered = numberEnteredMethod("Enter the hidden number from 0 to 9:", 0, 9);
             if (numberEntered == hiddenNumber) {
                 win = true;     // User won
                 break;
@@ -39,7 +40,7 @@ public class HW3Lesson {
                     System.out.println("Hidden number is less. Try again.");
                 else
                     System.out.println("Hidden number is greater. Try again.");
-                } else System.out.print("The hidden number was" + hiddenNumber + ". ");  //user lost
+                } else System.out.print("The hidden number was " + hiddenNumber + ". ");  //user lost
               }
             repeat++;
         } while (repeat < 4);
@@ -49,14 +50,29 @@ public class HW3Lesson {
             System.out.println("You lost!");
     }
 
-    static void gamesGuessWord() {
-        String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado", "broccoli", "carrot", "cherry", "garlic", "grape", "melon", "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut", "pear", "pepper", "pineapple", "pumpkin", "potato"};
+    static void gameGuessWord() {
+        String wordString = fileRead("txt.txt");
+        System.out.println(wordString);
+        String[] words = new String[30];
+        int bufer, j;
+        bufer = 0;
+        j = 0;
+        for (int i = 0; i < wordString.length(); i++) {
+            if ((wordString.substring(i, i+1)).equals(" ")) {
+                words[j] = wordString.substring(bufer, i);
+                j++;
+                bufer = i+1;
+            }
+        }
+        System.out.println(Arrays.toString(words));
+        int repeatGame;
         Random rand = new Random();
-        int numberHiddenWord = rand.nextInt(words.length-1);
+        int numberHiddenWord = rand.nextInt(j);
+        System.out.println("Guess word = " + words[numberHiddenWord]);
         String[] guessedLetters = {"#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#"};      // unraveled characters
         System.out.println("Guess what`s the word I was thinking of.");
         for (;;) {
-            String wordEntered = wordEntered("Enter a word, all letters must be lowercase:");
+            String wordEntered = wordEnteredMethod("Enter a word, all letters must be lowercase:");
             String[] wordEnteredAray = wordEntered.split("");   //array of entered word
             String[] wordHiddenAray = words[numberHiddenWord].split("");    //array of hidden word
             if (wordEntered.equals(words[numberHiddenWord])) {
@@ -79,25 +95,30 @@ public class HW3Lesson {
                     for (int i = 0; i < 14; i++) System.out.print(guessedLetters[i]);
                     System.out.println();
                 } else {
-                    if (numberEntered("You guessed nothing. Will you try again? Press \"1\" if \"Yes\", press \"0\" if \"No\":", 0, 1) == 0) break;
+                    repeatGame = numberEnteredMethod("You guessed nothing. Will you try again? Press \"1\" if \"Yes\", press \"0\" if \"No\":", 0, 1);
+                    if (repeatGame == 0) break;
                 }
             }
         }
     }
 
-    static int numberEntered(String message, int min, int max) {     //entering a number by the user using keyboard from minimum to maxmimum
-    	int numberEntered = 0;
-       	String numberEnteredString = "0";
-       	 do {
-            System.out.println(message);
-            numberEnteredString = sc.nextLine();
-		   	numberEntered = Integer.parseInt(numberEnteredString);
-        	} while (numberEntered < min || numberEntered > max);
-        return numberEntered;
+    static int numberEnteredMethod(String message, int min, int max) {     //entering a number by the user using keyboard from minimum to maxmimum
+        try {
+            int numberEntered;
+            String numberEnteredString;
+            do {
+                System.out.println(message);
+                numberEnteredString = sc.next();
+                numberEntered = Integer.parseInt(numberEnteredString.trim());
+            } while (numberEntered < min || numberEntered > max);
+            return numberEntered;
+        } catch (NumberFormatException nfe) {
+            System.out.println("You entered an incorrect number.");
+            return min;
+        }
     }
 
-
-    static String wordEntered(String message) {     //entering a word by the user using keyboard
+    static String wordEnteredMethod(String message) {     //entering a word by the user using keyboard
         String wordEntered, wordEnteredLower;
         do {
             System.out.println(message);
@@ -105,5 +126,23 @@ public class HW3Lesson {
             wordEnteredLower = wordEntered.toLowerCase();
         } while (!wordEntered.equals(wordEnteredLower));
         return wordEntered;
+    }
+
+    static String fileRead(String nameFile) {
+        try {
+            int b;
+            String textFile = "";
+            FileReader file = new FileReader(nameFile);
+            while ((b = file.read()) != -1) {
+                textFile += (char)b;
+            }
+            file.close();
+            return textFile;
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+            return nameFile;
+        }
+
     }
 }
