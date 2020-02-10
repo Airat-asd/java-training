@@ -28,6 +28,6 @@ public class Date {
         c.set(c.YEAR, 2025);
         System.out.println("Seting year 2025 " + c.getTime());
         c.set(c.MONTH, 10);
-        System.out.println("Seting month 10" + c.getTime());
+        System.out.println("Seting month 10 " + c.getTime());
     }
 }
