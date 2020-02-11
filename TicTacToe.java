@@ -1,13 +1,14 @@
 /**
  * Java level 1. Lesson 4. Home work - Tic tac toe
  * @author Zagretdinov Airat
- * @version 1.0 date 10.02.2020
+ * @version 2.0 date 11.02.2020
  */
 import java.util.*;
 
 class TicTacToe {
 
-    final int SIZE = 3;
+    final int SIZE = 5;
+    final int CHIPS = 4;
     final char DOT_X = 'x';
     final char DOT_O = 'o';
     final char DOT_EMPTY = '.';
@@ -56,7 +57,7 @@ class TicTacToe {
     void humanTurn() {
         int x, y;
         do {
-            System.out.println("Enter X and Y (1...3)");
+            System.out.println("Enter X and Y (1..." + SIZE + ")");
             x = sc.nextInt() - 1;
             y = sc.nextInt() - 1;
         } while (!isCellValid(x, y));
@@ -64,12 +65,102 @@ class TicTacToe {
     }
 
     void aiTurn() {
-        int x, y;
+        int x, y, go, equalX, equalY, equalD1, equalD2;
+        go = 0;
+
+        //check diagonals
+        equalD1 = equalD2 = 0;
+        //left to rigth
+        for (int i = 0; i < SIZE; i++) {
+            if (map[i][i] == DOT_X) {
+                equalD1++;
+                if (equalD1 == 2) {
+                    if (i == 1) {
+                        map[i + 1][i + 1] = DOT_O;
+                        go = 1;
+                    } else {
+                        if (i == (SIZE - 1)) {
+                            map[i - 2][i - 2] = DOT_O;
+                            go = 1;
+                        } else {
+                            map[i + 1][i + 1] = DOT_O;
+                            go = 1;
+                        }
+                    }
+                }
+            }
+            //rigth to left
+            if (map[i][SIZE - 1 - i] == DOT_X) {
+                equalD2++;
+                if (equalD2 == 2) {
+                    if (i == 1) {
+                        map[i + 1][SIZE - i - 2] = DOT_O;
+                        go = 1;
+                    } else {
+                        if (i == (SIZE - 1)) {
+                            map[i - 2][SIZE - i + 1] = DOT_O;
+                            go = 1;
+                        } else {
+                            map[i + 1][SIZE - i - 1] = DOT_O;
+                            go = 1;
+                        }
+                    }
+                }
+
+            }
+        }
+        //check horizontals
+        for (int i = 0; i < SIZE; i++) {
+            equalX = 0;
+            for (int j = 0; j < SIZE; j++)
+                if (map[i][j] == DOT_X) {
+                    equalX++;
+                    if (equalX == 2) {
+                        if (j == 1) {
+                            map[i][j + 1] = DOT_O;
+                            go = 1;
+                        } else {
+                            if (j == (SIZE - 1)) {
+                                map[i][j - 2] = DOT_O;
+                                go = 1;
+                            } else {
+                                map[i][j + 1] = DOT_O;
+                                go = 1;
+                            }
+                        }
+                    }
+                }
+        }
+        //check verticals
+        for (int i = 0; i < SIZE; i++) {
+            equalY = 0;
+            for (int j = 0; j < SIZE; j++)
+                if (map[j][i] == DOT_X) {
+                    equalY++;
+                    if (equalY == 2) {
+                        if (j == 1) {
+                            map[j + 1][i] = DOT_O;
+                            go = 1;
+                        } else {
+                            if (j == (SIZE - 1)) {
+                                map[j - 2][i] = DOT_O;
+                                go = 1;
+                            } else {
+                                map[j + 1][i] = DOT_O;
+                                go = 1;
+                            }
+                        }
+                    }
+                }
+        }
+
         do {
             x = rand.nextInt(SIZE);
             y = rand.nextInt(SIZE);
         } while (!isCellValid(x, y));
-        map[y][x] = DOT_O;
+        if (go == 0) map[y][x] = DOT_O;
+
+
     }
 
     void printMap() {
@@ -85,31 +176,37 @@ class TicTacToe {
         int equalX, equalY, equalD1, equalD2;
         for (int i = 0; i < SIZE; i++) {
             equalX = 0;
-            for (int j = 0; j < SIZE; j++) {
-                if (map[i][j] == dot) equalX++;
-                //System.out.println("equalX = " + equalX);
-            }
-            if (equalX == SIZE)
-                return true;
+            for (int j = 0; j < SIZE; j++)
+                if (map[i][j] == dot) {
+                    equalX++;
+                    if (equalX >= CHIPS)
+                        return true;
+                } else equalX = 0;
         }
         //check verticals
         for (int i = 0; i < SIZE; i++) {
             equalY = 0;
-            for (int j = 0; j < SIZE; j++) {
-                if (map[j][i] == dot) equalY++;
-                //System.out.println("equalY = " + equalY);
-            }
-            if (equalY == SIZE)
-                return true;
+            for (int j = 0; j < SIZE; j++)
+                if (map[j][i] == dot) {
+                    equalY++;
+                    if (equalY >= CHIPS)
+                        return true;
+                } else equalY = 0;
         }
         //check diagonals
         equalD1 = equalD2 = 0;
         for (int i = 0; i < SIZE; i++) {
-            if (map[i][i] == dot) equalD1++;
-            if (map[SIZE - 1 - i][SIZE - 1 - i] == dot) equalD2++;
+            if (map[i][i] == dot) {
+                equalD1++;
+                if (equalD1 >= CHIPS)
+                    return true;
+            } else equalD1 = 0;
+            if (map[i][SIZE - 1 - i] == dot) {
+                equalD2++;
+                if (equalD2 >= CHIPS)
+                    return true;
+            } else equalD2 = 0;
         }
-        if (equalD1 == SIZE || equalD2 == SIZE)
-            return true;
         return false;
     }
 
