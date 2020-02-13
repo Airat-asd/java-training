@@ -13,7 +13,6 @@ class HW5Lesson {
         persArray[2] = new Person("Sidorov", "Nikolai", "Antonovich", "couching", "bvnvbe@asdasd.com", "+54364", "64563", 25);
         persArray[3] = new Person("Alekseev", "David", "Nikolaevich", "CEO", "qhtyujsdasd.com", "+767554", "64563", 27);
         persArray[4] = new Person("Gabasov", "Maksim", "Leonidovich", "economist", "zxcvxcv@asdasd.com", "+14564254", "64563", 55);
-        //persArray[0].printPerson();
         for (int i = 0; i <5; i++) {
             if (persArray[i].getAge() > 40)
                 persArray[i].printPerson();
@@ -93,7 +92,9 @@ class HW5Lesson {
         }
 
         public void setAge(int age) {
-            this.age = age;
+            if (age >= 18)
+                this.age = age;
+            else System.out.println("Incorrect age (less than 18 years!");
         }
 
         public int getAge() {
